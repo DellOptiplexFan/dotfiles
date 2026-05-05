@@ -1,0 +1,27 @@
+
+window#waybar {
+	background-color: #1e1e2e;
+	color: #cdd6f4;
+}
+
+#workspaces button {
+	background-color: #181825;
+	color: #a6adc8;
+	border-bottom: 3px solid #a6adc8;
+	padding: 3px;
+	border-radius: 0px;
+	margin-left: 3px;
+}
+
+#workspaces button.active {
+	background-color: #313244;
+	border-bottom: 3px solid #fab387;
+}
+
+#image {
+	margin-left: 6px;
+}
+
+#pulseaudio, #network, #power-profiles-daemon, #cpu, #memory, #temerature, #tray {
+	margin-right: 6px;
+}
