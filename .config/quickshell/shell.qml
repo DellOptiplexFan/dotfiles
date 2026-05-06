@@ -9,6 +9,7 @@ import Quickshell.Widgets
 import Quickshell.Io
 
 PanelWindow {
+    id: root
     Rectangle {
         anchors.fill: parent
         color: "#1e1e2e"
@@ -151,17 +152,19 @@ PanelWindow {
         font.weight: Font.Medium
         color: "#cdd6f4"
         font.pixelSize: 16
-        text: Qt.formatDateTime(clock.date, "hh:mm:ss")
+        text: Qt.formatDateTime(clock.date, "h:mm:ss AP")
     }
 
     PwObjectTracker { objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource] }
 
+    // Roght side bar
     Row {
         rightPadding: 5
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         spacing: 5
 
+        // Cpu stats
         Text {
             font.weight: Font.Medium
             font.pixelSize: 16
@@ -169,6 +172,7 @@ PanelWindow {
             text: cpuUsage + "%" + " " + ""
         }
 
+        // Mem stats
         Text {
             font.weight: Font.Medium
             font.pixelSize: 16
@@ -202,6 +206,7 @@ PanelWindow {
             }
         }
 
+        // Pipewire audio thing
         Text {
             font.weight: Font.Medium
             font.pixelSize: 16
@@ -234,21 +239,34 @@ PanelWindow {
             anchors.verticalCenter: parent.verticalCenter
             Repeater {
                 model: SystemTray.items
-                delegate: IconImage {
+                delegate: Item {
                     required property SystemTrayItem modelData
-                    source: modelData.icon
                     width: 20
                     height: 20
                     anchors.verticalCenter: parent.verticalCenter
 
-                    MouseArea {
+                    QsMenuAnchor {
+                        id: menuAnchor
+                        menu: modelData.menu
+                        anchor.item: trayIcon
+                    }
+
+                    IconImage {
+                        id: trayIcon
+                        source: modelData.icon
+                        width: 20
+                        height: 20
                         anchors.fill: parent
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
-                        onClicked: (event) => {
-                            if (event.button === Qt.RightButton) {
-                                if (modelData.menu) modelData.menu.open(this)
-                            } else {
-                                modelData.activate()
+
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            onClicked: (event) => {
+                                if (event.button === Qt.RightButton) {
+                                    menuAnchor.open()
+                                } else {
+                                    modelData.activate()
+                                }
                             }
                         }
                     }
